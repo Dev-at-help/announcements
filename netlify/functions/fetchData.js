@@ -1,14 +1,9 @@
-// app/api/fetchData/route.js
+// netlify/functions/fetchData.js
+const axios = require('axios');
 
-import axios from 'axios';
-
-export async function GET(request) {
-  const urlParams = new URLSearchParams(request.url.split('?')[1]);
-  const fromDate = urlParams.get('fromDate') || '2025-01-25'; // Default from date
-  const toDate = urlParams.get('toDate') || '2025-01-26'; // Default to date
-
-  console.log("Fetching data from:", fromDate, "to:", toDate);
-
+exports.handler = async function (event, context) {
+  const { fromDate, toDate } = event.queryStringParameters;
+console.log("=========")
   const config = {
     method: 'get',
     maxBodyLength: Infinity,
@@ -31,9 +26,15 @@ export async function GET(request) {
 
   try {
     const response = await axios.request(config);
-    return new Response(JSON.stringify(response.data), { status: 200 });
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response.data)
+    };
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ error: 'Failed to fetch data' }), { status: 500 });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Failed to fetch data' })
+    };
   }
-}
+};

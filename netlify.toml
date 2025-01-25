@@ -1,0 +1,7 @@
+[build]
+  functions = "netlify/functions"
+  publish = "out"
+
+[dev]
+  framework = "react"
+  port = 8888

@@ -15,7 +15,7 @@ export default function Home() {
     async function fetchData() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/fetchData?fromDate=${fromDate}&toDate=${toDate}`);
+        const res = await fetch(`/.netlify/functions/fetchData?fromDate=${fromDate}&toDate=${toDate}`);
         const json = await res.json();
         setData(json.Table); // Store only the "Table" array from the response
       } catch (error) {
@@ -62,6 +62,7 @@ export default function Home() {
           onChange={(e) => setToDate(e.target.value)}
         />
       </label>
+      <button onClick={handleDateChange}>Fetch Data</button>
 
       <br />
       <br />
