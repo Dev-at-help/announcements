@@ -3,5 +3,5 @@
   publish = "out"
 
 [dev]
-  framework = "react"
+  framework = "next"
   port = 8888
