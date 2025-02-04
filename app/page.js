@@ -8,8 +8,10 @@ export default function Home() {
   const [data, setData] = useState([]);
   // console.table(data);
   const [loading, setLoading] = useState(true);
-  const [fromDate, setFromDate] = useState("2025-01-25"); // default from date
-  const [toDate, setToDate] = useState("2025-01-26"); // default to date
+  const [fromDate, setFromDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [toDate, setToDate] = useState(new Date().toISOString().split("T")[0]);
   const [fetchDataNow, setFetchDataNow] = useState(false);
 
   const toggleFetchDataNow = () => {
