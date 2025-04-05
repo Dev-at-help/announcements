@@ -3,10 +3,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import DataTable from "./Components/DataTable";
+import { Button, DatePicker } from "antd";
+import { dummyData } from "@/constants";
+import dayjs from "dayjs";
 
 export default function Home() {
+  const { RangePicker } = DatePicker;
+
   const [data, setData] = useState([]);
-  // console.table(data);
   const [loading, setLoading] = useState(true);
   const [fromDate, setFromDate] = useState(
     new Date().toISOString().split("T")[0]
@@ -31,6 +36,17 @@ export default function Home() {
         return;
       }
       setToDate(value);
+    }
+  };
+
+  const onDateChange = (dates) => {
+    if (dates) {
+      const [start, end] = dates;
+      const adjustedStart = start.endOf("day");
+      const adjustedEnd = end.endOf("day");
+
+      setFromDate(adjustedStart.format("YYYY-MM-DD"));
+      setToDate(adjustedEnd.format("YYYY-MM-DD"));
     }
   };
 
@@ -64,40 +80,37 @@ export default function Home() {
       style={{
         opacity: loading ? 0.5 : 1,
         pointerEvents: loading ? "none" : "",
+        padding: "20px",
       }}
     >
       <h1>BSE India Data - Award of Order / Receipt of Order</h1>
+      <br />
       <a href="https://www.bseindia.com/corporates/ann.html" target="_blank">
         Go to BSE
       </a>
-      <br />
-      <br />
-
-      {/* Date Inputs */}
-      <label>
-        From Date:
-        <input
-          type="date"
-          value={fromDate}
-          onChange={(e) => handleDateChange("fromDate", e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        To Date:
-        <input
-          type="date"
-          value={toDate}
-          onChange={(e) => handleDateChange("toDate", e.target.value)}
-        />
-      </label>
-      <br />
-      <button onClick={toggleFetchDataNow} disabled={loading}>
-        Fetch Data
-      </button>
 
       <br />
       <br />
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "15px",
+        }}
+      >
+        <RangePicker 
+        value={[dayjs(fromDate), dayjs(toDate)]}
+        maxDate={dayjs().startOf("day")} 
+        onChange={onDateChange} 
+        />
+        <Button onClick={toggleFetchDataNow} name="Fetch Data">
+          Fetch Data
+        </Button>
+      </div>
+
+      <br />
+
       <div
         style={{
           width: "100%",
@@ -106,7 +119,7 @@ export default function Home() {
           height: "100%",
         }}
       >
-        <table border="1" cellPadding="10">
+        <table border="1" cellPadding="10" style={{ display: "none" }}>
           <thead>
             <tr>
               {/* <th>News ID</th> */}
@@ -145,6 +158,7 @@ export default function Home() {
             ))}
           </tbody>
         </table>
+        <DataTable data={data} />
       </div>
     </div>
   );
